@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="11" author="v2">
+        <addColumn
+                schemaName="public"
+                tableName="person">
+            <column name="new_column" type="varchar(255)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet  author="liquibase"  id="30">
+        <createTable tableName="table30">
+            <column name="id" type="int"/>
+            <column name="heading" type="varchar(36)"/>
+            <column name="author" type="varchar(36)"/>
+        </createTable>
+        <rollback>
+            drop table table30
+        </rollback>
+    </changeSet>
+
+    <changeSet id="multiRollbackTest" author="rs">
+        <createTable tableName="multiRollback1">
+            <column name="id" type="int"/>
+        </createTable>
+        <createTable tableName="multiRollback2">
+            <column name="id" type="int"/>
+        </createTable>
+        <createTable tableName="multiRollback3">
+            <column name="id" type="int"/>
+        </createTable>
+        <rollback>
+            drop table multiRollback1;
+            drop table multiRollback2;
+        </rollback>
+        <rollback>drop table multiRollback3</rollback>
+    </changeSet>
+
+    <changeSet id="99" author="SENA.KARABACAK">
+        <dropTable tableName="multiRollback3"/>
+    </changeSet>
+
+
+    <changeSet id="changeRollback2-drop" author="liquibase">
+        <dropTable tableName="multiRollback2"/>
+        <rollback changeSetId="multiRollbackTest" changeSetAuthor="rs"/>
+    </changeSet>
+</databaseChangeLog>
